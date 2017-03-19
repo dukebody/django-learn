@@ -1,0 +1,157 @@
+What do we want to achieve?
+----------------------------
+Recipes API to create and retrieve recipes.
+
+Two kind of entities:
+Recipe:
+- author
+- name
+- time
+- serves
+- ingredients - free text
+- procedure - free text
+
+What is Django
+--------------
+
+Django is a full framework (not a library like React) created in XXXX to do web development in Python.
+
+Main parts:
+- Models - Object Relational Mapper - No need to write SQL - avoids SQL injection. Database implementation independent. Not as flexible as raw SQL.
+- User management, authentication, sessions - not covered
+- Admin - CRUD best app ever
+- URL Router - uses regular expressions
+- Views (controllers)
+- Templates - not covered
+- Forms - not covered
+
+
+# Create project and app
+Activate your virtual environment:
+source bin/activate
+
+Create project:
+django-admin startproject mysite .
+
+See structure of settings.py. Important:
+- debug=True -- full traceback in browser
+- installed apps
+- databases - most Django code is database-agnostic
+
+Start server:
+python manage.py runserver
+
+Browse localhost:8000
+
+Apply migrations to create base Django tables in database using sqlite3.
+python manage.py migrate
+
+Get to the admin localhost:8000
+
+We don't have an user!
+
+python manage.py createsuperuser
+
+
+Create app:
+python manage.py startapp recipes
+
+Add app to the list of installed apps in settings.py.
+
+# Models
+
+Python is an object-oriented language - we model recipes as a class.
+
+Define Django model for recipe
+
+
+Everytime we make a change to Django models (even if it's just choices) we need to create a database migration.
+
+Create tables migration for our model in database
+python manage.py makemigrations recipes
+
+Important:
+- auto-incremental indexed id column is added by default
+- mixes database and admin stuff (e.g. blank and null, choices, help_text...)
+
+
+Apply that migration:
+python manage.py migrate recipes
+
+
+Get to Django admin. Where is our new model? We have to register it.
+Add it to admin.py
+
+Browse admin and add a recipe.
+See how the validation works and how a recipe is represented by its name
+
+
+# Shell and ORM
+Python is an interpreted language. This means we don't have to compile the code before running and we can run code interactively.
+
+Run a Python shell already configured to have access to our code:
+python manage.py shell
+
+from recipes.models import Recipe
+
+
+Django model classes have an attribute "objects" for database access.
+
+Recipe.objects.all()  # all recipes, return a queryset, which is a lazy list
+
+Django has created a SQL query, executed it in the database and mapped the response to an object. To see the query:
+
+print(Recipe.objects.all().query)
+
+
+recipe = Recipe.objects.all()[0]
+
+See all attributes:
+recipe.author
+recipe.name
+recipe.time
+
+Change an attribute and save:
+recipe.time = 40
+recipe.save()
+
+Filter:
+Recipe.objects.filter(name='Pizza con patatine')
+
+Magic __attribute:
+Recipe.objects.filter(name__contains='Pizza')
+
+Create:
+me = recipe.author
+Recipe.objects.create(author=me, name='another recipe', time=30, serves=2, ingredients='very nice', procedure='bablabla')
+
+Recipe.objects.all()
+
+Ordering:
+Recipe.objects.order_by('-name')
+
+Chaining:
+Recipe.objects.filter(name__contains='a').order_by('name')
+
+
+
+# Django URL routing
+URL routing is done in urls.py. This is where Django looks for a variable called "urlpatterns" by default, that contains a list of urls.
+
+See how it is done for the admin.
+
+Add a url pattern for listing recipes.
+
+Go to recipes.views and create a function for the view outputting "hello world!". Use HttpResponse as wrapper.
+
+Now output "hello {user}" using the request.user.username.
+
+Now output the list of recipes names separated by commas:
+recipes = Recipe.objects.all()
+msg = ', '.join(recipe.name for recipe in recipes)
+
+
+Now output the list of recipes objects with name, serves and time (and any other field we want), serialized in JSON using JsonResponse with safe=False (to allow list).
+
+
+Now filter using a get parameter.
