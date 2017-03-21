@@ -14,24 +14,40 @@ Recipe:
 What is Django
 --------------
 
-Django is a full framework (not a library like React) created in XXXX to do web development in Python.
+Django is a full framework (not a library like React) created in 2005 to do web development in Python.
+
+It's maintained by a non profit with a very mature development cycle and used by companies like Mozilla, Instagram, Disqus, Pinterest or Instagram.
+
+Praised for its very good documentation. Most well known Python web framework, can find help super easy and tons of packages.
+
+Three key points that make this framework stand out:
+- Mature development, well done with lots of useful features
+- Tons of users, easy help and packages
+- Very good documentation
+
 
 Main parts:
-- Models - Object Relational Mapper - No need to write SQL - avoids SQL injection. Database implementation independent. Not as flexible as raw SQL.
-- User management, authentication, sessions - not covered
+- Models - Object Relational Mapper - No need to write SQL - avoids SQL injection. Database implementation independent. Not as flexible as raw SQL though.
+- URL Router - uses regular expressions to route to views
+- Views
 - Admin - CRUD best app ever
-- URL Router - uses regular expressions
-- Views (controllers)
+- User management, authentication, sessions - not covered
 - Templates - not covered
-- Forms - not covered
+- Forms - very powerful, not covered
+- Internationalization - not covered
+- Plugabble cache - not covered
 
+
+Let's code!
+------------
 
 # Create project and app
-Activate your virtual environment:
-source bin/activate
+Activate the virtual environment you created as homework:
+
+  $ source bin/activate
 
 Create project:
-django-admin startproject mysite .
+  $ django-admin startproject mysite .
 
 See structure of settings.py. Important:
 - debug=True -- full traceback in browser
@@ -39,22 +55,25 @@ See structure of settings.py. Important:
 - databases - most Django code is database-agnostic
 
 Start server:
-python manage.py runserver
+
+  python manage.py runserver
 
 Browse localhost:8000
 
 Apply migrations to create base Django tables in database using sqlite3.
-python manage.py migrate
 
-Get to the admin localhost:8000
+  python manage.py migrate
+
+Get to the admin localhost:8000/admin
 
 We don't have an user!
 
-python manage.py createsuperuser
+  python manage.py createsuperuser
 
 
 Create app:
-python manage.py startapp recipes
+
+  python manage.py startapp recipes
 
 Add app to the list of installed apps in settings.py.
 
